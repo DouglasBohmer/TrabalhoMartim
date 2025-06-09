@@ -1,0 +1,194 @@
+erDiagram
+    %% Entidades principais
+    FILMES {
+        NUMBER id_filme PK
+        VARCHAR2 titulo
+        NUMBER duracao
+        NUMBER ano_lancamento
+        VARCHAR2 resolucao
+        NUMBER id_genero FK
+        NUMBER id_faixa FK
+        NUMBER id_pais_origem FK
+        CHAR exibir
+    }
+    
+    SERIES {
+        NUMBER id_serie PK
+        VARCHAR2 titulo
+        NUMBER ano_lancamento
+        NUMBER id_genero FK
+        NUMBER id_faixa FK
+        NUMBER id_pais_origem FK
+        CHAR exibir
+    }
+    
+    TEMPORADAS {
+        NUMBER id_temporada PK
+        NUMBER numero_temporada
+        NUMBER id_serie FK
+    }
+    
+    EPISODIOS {
+        NUMBER id_episodio PK
+        VARCHAR2 titulo
+        NUMBER duracao
+        NUMBER id_temporada FK
+    }
+    
+    %% Entidades de apoio
+    GENEROS {
+        NUMBER id_genero PK
+        VARCHAR2 nome
+    }
+    
+    FAIXAS_ETARIAS {
+        NUMBER id_faixa PK
+        VARCHAR2 descricao
+    }
+    
+    PAISES {
+        NUMBER id_pais PK
+        VARCHAR2 nome
+    }
+    
+    %% Pessoas
+    ATORES {
+        NUMBER id_ator PK
+        VARCHAR2 nome
+        VARCHAR2 nacionalidade
+        CHAR sexo
+        DATE data_nascimento
+    }
+    
+    DIRETORES {
+        NUMBER id_diretor PK
+        VARCHAR2 nome
+        VARCHAR2 nacionalidade
+        CHAR sexo
+        DATE data_nascimento
+    }
+    
+    PERSONAGENS {
+        NUMBER id_personagem PK
+        VARCHAR2 nome
+    }
+    
+    %% Tabelas associativas
+    ATORES_PERSONAGENS {
+        NUMBER id_ator FK
+        NUMBER id_personagem FK
+        NUMBER id_serie FK
+        NUMBER id_filme FK
+    }
+    
+    DIRECAO_FILMES {
+        NUMBER id_diretor FK
+        NUMBER id_filme FK
+    }
+    
+    DIRECAO_EPISODIOS {
+        NUMBER id_diretor FK
+        NUMBER id_episodio FK
+    }
+    
+    %% Premiações
+    PREMIACAO_FILMES {
+        NUMBER id PK
+        NUMBER id_filme FK
+        VARCHAR2 premio
+        NUMBER ano
+    }
+    
+    PREMIACAO_SERIES {
+        NUMBER id PK
+        NUMBER id_serie FK
+        VARCHAR2 premio
+        NUMBER ano
+        NUMBER temporada
+    }
+    
+    PREMIACAO_ATORES {
+        NUMBER id PK
+        NUMBER id_ator FK
+        NUMBER ano
+        VARCHAR2 premio
+        NUMBER id_filme FK
+        NUMBER id_serie FK
+    }
+    
+    PREMIACAO_DIRETORES {
+        NUMBER id PK
+        NUMBER id_diretor FK
+        NUMBER ano
+        VARCHAR2 premio
+        NUMBER id_filme FK
+        NUMBER id_serie FK
+    }
+    
+    %% Avaliações
+    AVALIACOES_FILMES {
+        NUMBER id PK
+        NUMBER id_filme FK
+        NUMBER nota
+    }
+    
+    AVALIACOES_SERIES {
+        NUMBER id PK
+        NUMBER id_serie FK
+        NUMBER nota
+    }
+    
+    AVALIACOES_TEMPORADAS {
+        NUMBER id PK
+        NUMBER id_temporada FK
+        NUMBER nota
+    }
+    
+    AVALIACOES_EPISODIOS {
+        NUMBER id PK
+        NUMBER id_episodio FK
+        NUMBER nota
+    }
+    
+    %% Relacionamentos principais
+    FILMES ||--o{ ATORES_PERSONAGENS : "tem"
+    SERIES ||--o{ ATORES_PERSONAGENS : "tem"
+    ATORES ||--o{ ATORES_PERSONAGENS : "atua em"
+    PERSONAGENS ||--o{ ATORES_PERSONAGENS : "é interpretado"
+    
+    FILMES ||--o{ DIRECAO_FILMES : "é dirigido"
+    DIRETORES ||--o{ DIRECAO_FILMES : "dirige"
+    
+    EPISODIOS ||--o{ DIRECAO_EPISODIOS : "é dirigido"
+    DIRETORES ||--o{ DIRECAO_EPISODIOS : "dirige"
+    
+    SERIES ||--|{ TEMPORADAS : "possui"
+    TEMPORADAS ||--|{ EPISODIOS : "contém"
+    
+    %% Relacionamentos com tabelas de apoio
+    GENEROS ||--o{ FILMES : "classifica"
+    GENEROS ||--o{ SERIES : "classifica"
+    
+    FAIXAS_ETARIAS ||--o{ FILMES : "define idade"
+    FAIXAS_ETARIAS ||--o{ SERIES : "define idade"
+    
+    PAISES ||--o{ FILMES : "origem"
+    PAISES ||--o{ SERIES : "origem"
+    
+    %% Relacionamentos de premiação
+    FILMES ||--o{ PREMIACAO_FILMES : "recebe"
+    SERIES ||--o{ PREMIACAO_SERIES : "recebe"
+    
+    ATORES ||--o{ PREMIACAO_ATORES : "ganha"
+    FILMES ||--o{ PREMIACAO_ATORES : "por"
+    SERIES ||--o{ PREMIACAO_ATORES : "por"
+    
+    DIRETORES ||--o{ PREMIACAO_DIRETORES : "ganha"
+    FILMES ||--o{ PREMIACAO_DIRETORES : "por"
+    SERIES ||--o{ PREMIACAO_DIRETORES : "por"
+    
+    %% Relacionamentos de avaliação
+    FILMES ||--o{ AVALIACOES_FILMES : "é avaliado"
+    SERIES ||--o{ AVALIACOES_SERIES : "é avaliada"
+    TEMPORADAS ||--o{ AVALIACOES_TEMPORADAS : "é avaliada"
+    EPISODIOS ||--o{ AVALIACOES_EPISODIOS : "é avaliado"
